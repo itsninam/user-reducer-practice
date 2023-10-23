@@ -1,9 +1,9 @@
-const Task = ({ task }) => {
+const Task = ({ task, handleRemoveTask }) => {
   return (
     <li>
       <span>{task.taskName}</span>
       <button>Edit</button>
-      <button>Delete</button>
+      <button onClick={() => handleRemoveTask(task)}>Delete</button>
     </li>
   );
 };

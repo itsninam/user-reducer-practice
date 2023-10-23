@@ -35,9 +35,11 @@ import Input from "./Input";
 const initialValue = {
   tasks: [
     {
+      id: 0,
       taskName: "shopping",
     },
     {
+      id: 1,
       taskName: "cleaning",
     },
   ],
@@ -46,9 +48,21 @@ const initialValue = {
 const reducer = (state, action) => {
   switch (action.type) {
     case "add_task": {
+      const newTask = {
+        id: Math.random(),
+        taskName: action.payload,
+      };
+
       return {
         ...state,
-        tasks: [...state.tasks, { taskName: action.payload }],
+        tasks: [...state.tasks, newTask],
+      };
+    }
+
+    case "remove_task": {
+      return {
+        ...state,
+        tasks: state.tasks.filter((task) => task.id !== action.payload),
       };
     }
   }
@@ -63,11 +77,15 @@ function App() {
     dispatch({ type: "add_task", payload: userInput });
   };
 
+  const handleRemoveTask = (task) => {
+    dispatch({ type: "remove_task", payload: task.id });
+  };
+
   return (
     <div className="App">
       <Input handleSubmitTask={handleSubmitTask} />
 
-      <TaskList state={state} />
+      <TaskList state={state} handleRemoveTask={handleRemoveTask} />
     </div>
   );
 }
