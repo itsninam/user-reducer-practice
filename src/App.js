@@ -1,56 +1,73 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import "./App.css";
+import TaskList from "./TaskList";
+import Input from "./Input";
 
+// const initialValue = {
+//   name: "Anne",
+//   age: 25,
+// };
+
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case "increment": {
+//       return {
+//         ...state,
+//         age: state.age + 1,
+//       };
+//     }
+
+//     case "decrement": {
+//       return {
+//         ...state,
+//         age: state.age - 1,
+//       };
+//     }
+
+//     case "change_name": {
+//       return {
+//         ...state,
+//         name: action.payload,
+//       };
+//     }
+//   }
+// };
 const initialValue = {
-  name: "Anne",
-  age: 25,
+  tasks: [
+    {
+      taskName: "shopping",
+    },
+    {
+      taskName: "cleaning",
+    },
+  ],
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "increment": {
+    case "add_task": {
       return {
         ...state,
-        age: state.age + 1,
-      };
-    }
-
-    case "decrement": {
-      return {
-        ...state,
-        age: state.age - 1,
-      };
-    }
-
-    case "change_name": {
-      return {
-        ...state,
-        name: action.payload,
+        tasks: [...state.tasks, { taskName: action.payload }],
       };
     }
   }
 };
-
 function App() {
+  // const [state, dispatch] = useReducer(reducer, initialValue);
   const [state, dispatch] = useReducer(reducer, initialValue);
+
+  const handleSubmitTask = (event, userInput) => {
+    event.preventDefault();
+
+    dispatch({ type: "add_task", payload: userInput });
+  };
 
   return (
     <div className="App">
-      <input
-        value={state.name}
-        onChange={(event) =>
-          dispatch({ type: "change_name", payload: event.target.value })
-        }
-      />
+      <Input handleSubmitTask={handleSubmitTask} />
 
-      <div>
-        <span>
-          {state.name}, {state.age} years old
-        </span>
-      </div>
-
-      <button onClick={() => dispatch({ type: "increment" })}>Increment</button>
-      <button onClick={() => dispatch({ type: "decrement" })}>Decrement</button>
+      <TaskList state={state} />
     </div>
   );
 }
