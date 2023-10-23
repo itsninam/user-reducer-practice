@@ -65,6 +65,17 @@ const reducer = (state, action) => {
         tasks: state.tasks.filter((task) => task.id !== action.payload),
       };
     }
+
+    case "edit_task": {
+      return {
+        ...state,
+        tasks: state.tasks.map((task) => {
+          return task.id === action.payload.id
+            ? { ...task, taskName: action.payload.taskName }
+            : task;
+        }),
+      };
+    }
   }
 };
 function App() {
@@ -81,11 +92,19 @@ function App() {
     dispatch({ type: "remove_task", payload: task.id });
   };
 
+  const handleEditTask = (editTask) => {
+    dispatch({ type: "edit_task", payload: editTask });
+  };
+
   return (
     <div className="App">
       <Input handleSubmitTask={handleSubmitTask} />
 
-      <TaskList state={state} handleRemoveTask={handleRemoveTask} />
+      <TaskList
+        state={state}
+        handleRemoveTask={handleRemoveTask}
+        handleEditTask={handleEditTask}
+      />
     </div>
   );
 }

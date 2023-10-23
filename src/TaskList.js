@@ -1,6 +1,6 @@
 import Task from "./Task";
 
-const TaskList = ({ state, handleRemoveTask }) => {
+const TaskList = ({ state, handleRemoveTask, handleEditTask }) => {
   if (!state.tasks.length) {
     return <p>Add a task</p>;
   }
@@ -9,7 +9,12 @@ const TaskList = ({ state, handleRemoveTask }) => {
     <ul>
       {state.tasks.map((task) => {
         return (
-          <Task task={task} key={task.id} handleRemoveTask={handleRemoveTask} />
+          <Task
+            task={task}
+            key={task.id}
+            handleRemoveTask={handleRemoveTask}
+            handleEditTask={handleEditTask}
+          />
         );
       })}
     </ul>
