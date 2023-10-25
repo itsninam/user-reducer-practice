@@ -1,6 +1,6 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import "./App.css";
-import TaskList from "./TaskList";
+import UserList from "./UserList";
 import Input from "./Input";
 
 // const initialValue = {
@@ -32,78 +32,89 @@ import Input from "./Input";
 //     }
 //   }
 // };
+
 const initialValue = {
-  tasks: [
+  users: [
     {
       id: 0,
-      taskName: "shopping",
+      firstName: "Bob",
+      lastName: "Roy",
     },
     {
       id: 1,
-      taskName: "cleaning",
+      firstName: "Jane",
+      lastName: "Doe",
     },
   ],
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "add_task": {
-      const newTask = {
-        id: Math.random(),
-        taskName: action.payload,
-      };
-
+    case "add_user": {
       return {
         ...state,
-        tasks: [...state.tasks, newTask],
-      };
-    }
-
-    case "remove_task": {
-      return {
-        ...state,
-        tasks: state.tasks.filter((task) => task.id !== action.payload),
+        users: [
+          ...state.users,
+          {
+            id: Math.random(),
+            firstName: action.payload.firstName,
+            lastName: action.payload.lastName,
+          },
+        ],
       };
     }
 
-    case "edit_task": {
+    case "delete_user": {
       return {
         ...state,
-        tasks: state.tasks.map((task) => {
-          return task.id === action.payload.id
-            ? { ...task, taskName: action.payload.taskName }
-            : task;
-        }),
+        users: state.users.filter((user) => user.id !== action.payload),
+      };
+    }
+
+    case "edit_user": {
+      return {
+        ...state,
+        users: state.users.map((user) =>
+          user.id === action.payload.id
+            ? {
+                ...user,
+                firstName: action.payload.firstName,
+                lastName: action.payload.lastName,
+              }
+            : user
+        ),
       };
     }
   }
 };
+
 function App() {
-  // const [state, dispatch] = useReducer(reducer, initialValue);
   const [state, dispatch] = useReducer(reducer, initialValue);
 
-  const handleSubmitTask = (event, userInput) => {
+  const handleAddUser = (event, userInput) => {
     event.preventDefault();
+    console.log(userInput);
 
-    dispatch({ type: "add_task", payload: userInput });
+    dispatch({ type: "add_user", payload: userInput });
   };
 
-  const handleRemoveTask = (task) => {
-    dispatch({ type: "remove_task", payload: task.id });
+  const handleDeleteUser = (user) => {
+    dispatch({ type: "delete_user", payload: user.id });
   };
 
-  const handleEditTask = (editTask) => {
-    dispatch({ type: "edit_task", payload: editTask });
+  const handleEditUser = (user) => {
+    console.log(user);
+    dispatch({ type: "edit_user", payload: user });
   };
 
   return (
     <div className="App">
-      <Input handleSubmitTask={handleSubmitTask} />
+      <Input handleAddUser={handleAddUser} state={state} />
 
-      <TaskList
+      <UserList
         state={state}
-        handleRemoveTask={handleRemoveTask}
-        handleEditTask={handleEditTask}
+        handleDeleteUser={handleDeleteUser}
+        handleEditUser={handleEditUser}
       />
     </div>
   );

@@ -1,19 +1,36 @@
 import { useState } from "react";
 
-const Input = ({ handleSubmitTask }) => {
-  const [userInput, setUserInput] = useState("");
-
-  const handleUserInput = (event) => {
-    setUserInput(event.target.value);
-  };
+const Input = ({ handleAddUser }) => {
+  const [userInput, setUserInput] = useState({ firstName: "", lastName: "" });
   return (
     <form
       onSubmit={(event) => {
-        handleSubmitTask(event, userInput);
-        setUserInput("");
+        handleAddUser(event, userInput);
+        setUserInput({ firstName: "", lastName: "" });
       }}
     >
-      <input value={userInput} onChange={handleUserInput} />
+      <input
+        placeholder="Enter first name"
+        name="firstName"
+        value={userInput.firstName}
+        onChange={(event) =>
+          setUserInput({
+            ...userInput,
+            [event.target.name]: event.target.value,
+          })
+        }
+      />
+      <input
+        placeholder="Enter last name"
+        name="lastName"
+        value={userInput.lastName}
+        onChange={(event) =>
+          setUserInput({
+            ...userInput,
+            [event.target.name]: event.target.value,
+          })
+        }
+      />
       <button type="submit">Add</button>
     </form>
   );
